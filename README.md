@@ -54,7 +54,7 @@ flowchart TD
 | Field service management | [`field-execution`](.agents/skills/field-execution/SKILL.md) | Draft a field-ready inspection or maintenance package after approval | Dispatches people or creates production work orders |
 | Cross-domain agentic operations | [`agentic-operations-orchestrator`](.agents/skills/agentic-operations-orchestrator/SKILL.md) | Preserves case state, routes skill handoffs, enforces human approval, and records outcomes | Overrides safety or human authority |
 
-The project-level guide is [`AGENTS.md`](AGENTS.md). The sole POC workflow contract is [`workflow.md`](.agents/skills/agentic-operations-orchestrator/workflow.md). Each reusable skill follows the formal Codex structure: `.agents/skills/<skill-name>/SKILL.md` plus `agents/openai.yaml` metadata.
+The project-level guide is [`AGENTS.md`](AGENTS.md). The sole POC workflow contract is [`WORKFLOW.md`](WORKFLOW.md). Each reusable skill follows the formal Codex structure: `.agents/skills/<skill-name>/SKILL.md` plus `agents/openai.yaml` metadata.
 
 ## 4. POC architecture boundary
 
@@ -75,7 +75,7 @@ The OT layer remains the trusted source for operational signals. Existing enterp
 ## 6. Runnable lab components
 
 - [`ESP Risk Modeling Lab`](ml/README.md) — the complete supervised-ML component: decision, synthetic data, chronological train/validation/test split, model comparison, held-out results, and future FastAPI boundary.
-- [`ESP Risk-to-Response Workflow`](.agents/skills/agentic-operations-orchestrator/workflow.md) — how a Codex or Claude Code agent uses the skills to call the risk model and move an approved case through operations and field execution.
+- [`ESP Risk-to-Response Workflow`](WORKFLOW.md) — how a Codex or Claude Code agent uses the skills to call the risk model and move an approved case through operations and field execution.
 
 ## 7. What would make it production-ready
 

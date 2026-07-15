@@ -9,7 +9,7 @@ This is a public-safe, dry-lab POC for upstream oil-field decision support. Use 
 ```text
 .agents/skills/<skill-name>/SKILL.md  # Codex-discoverable reusable skill instructions
 .agents/skills/<skill-name>/agents/  # Codex UI metadata for that skill
-.agents/skills/agentic-operations-orchestrator/workflow.md  # Cross-skill workflow contract
+WORKFLOW.md                     # Cross-skill ESP workflow contract
 data/                           # Synthetic input artifacts only
 README.md                       # Business story, architecture, and POC boundary
 ```
@@ -19,7 +19,7 @@ README.md                       # Business story, architecture, and POC boundary
 - `asset-performance`: assess asset/well risk from evidence.
 - `process-energy-optimization`: evaluate operating-envelope trade-offs.
 - `field-execution`: prepare a draft field package after approval.
-- `agentic-operations-orchestrator`: preserve case state, enforce handoffs and approval, and record outcomes. Its `workflow.md` is the sole POC workflow contract.
+- `agentic-operations-orchestrator`: preserve case state, enforce handoffs and approval, and record outcomes. Project-level `WORKFLOW.md` is the sole POC workflow contract.
 
 ## Safety and governance
 

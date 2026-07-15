@@ -7,7 +7,7 @@ description: Coordinate asset-performance, process-optimization, and field-execu
 
 Coordinate a decision workflow while preserving safety, traceability, and human control.
 
-Use the POC-specific [`workflow.md`](workflow.md) for the ESP risk-to-response handoff contract and risk-score tool interface.
+Use the project-level [`WORKFLOW.md`](../../../WORKFLOW.md) for the ESP risk-to-response handoff contract and risk-score tool interface.
 
 ## Workflow
 
