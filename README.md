@@ -39,12 +39,12 @@ flowchart TD
 
 | Business domain | Skill | Simple responsibility | Never does |
 |---|---|---|---|
-| Asset performance management | [`asset-performance`](skills/asset-performance/SKILL.md) | Prioritize an emerging asset risk and assemble evidence | Claims a proven root cause or controls equipment |
-| Production operations / process management | [`process-energy-optimization`](skills/process-energy-optimization/SKILL.md) | Compare the operating envelope, production, energy, and constraint trade-offs | Changes an operating parameter |
-| Field service management | [`field-execution`](skills/field-execution/SKILL.md) | Draft a field-ready inspection or maintenance package after approval | Dispatches people or creates production work orders |
-| Cross-domain agentic operations | [`agentic-operations-orchestrator`](skills/agentic-operations-orchestrator/SKILL.md) | Preserves case state, routes skill handoffs, enforces human approval, and records outcomes | Overrides safety or human authority |
+| Asset performance management | [`asset-performance`](.agents/skills/asset-performance/SKILL.md) | Prioritize an emerging asset risk and assemble evidence | Claims a proven root cause or controls equipment |
+| Production operations / process management | [`process-energy-optimization`](.agents/skills/process-energy-optimization/SKILL.md) | Compare the operating envelope, production, energy, and constraint trade-offs | Changes an operating parameter |
+| Field service management | [`field-execution`](.agents/skills/field-execution/SKILL.md) | Draft a field-ready inspection or maintenance package after approval | Dispatches people or creates production work orders |
+| Cross-domain agentic operations | [`agentic-operations-orchestrator`](.agents/skills/agentic-operations-orchestrator/SKILL.md) | Preserves case state, routes skill handoffs, enforces human approval, and records outcomes | Overrides safety or human authority |
 
-The project-level guide is [`AGENTS.md`](AGENTS.md). The top-level orchestration contract is in [`agents/industrial-operations-orchestrator.md`](agents/industrial-operations-orchestrator.md). Each reusable skill follows the formal Codex structure: `skills/<skill-name>/SKILL.md` plus `agents/openai.yaml` metadata.
+The project-level guide is [`AGENTS.md`](AGENTS.md). The orchestration contract is in [`docs/industrial-operations-orchestrator.md`](docs/industrial-operations-orchestrator.md). Each reusable skill follows the formal Codex structure: `.agents/skills/<skill-name>/SKILL.md` plus `agents/openai.yaml` metadata.
 
 ## 3. POC architecture boundary
 

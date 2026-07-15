@@ -7,9 +7,9 @@ This is a public-safe, dry-lab POC for upstream oil-field decision support. Use 
 ## Project structure
 
 ```text
-agents/                         # Cross-skill orchestration contract and case lifecycle
-skills/<skill-name>/SKILL.md    # Reusable, domain-specific skill instructions
-skills/<skill-name>/agents/     # Codex UI metadata for that skill
+.agents/skills/<skill-name>/SKILL.md  # Codex-discoverable reusable skill instructions
+.agents/skills/<skill-name>/agents/  # Codex UI metadata for that skill
+docs/                            # Cross-skill orchestration contract and case lifecycle
 data/                           # Synthetic input artifacts only
 README.md                       # Business story, architecture, and POC boundary
 ```
