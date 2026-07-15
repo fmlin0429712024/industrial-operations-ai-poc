@@ -1,0 +1,11 @@
+{
+  "case_id": "gas-compressor-001",
+  "asset": {"asset_id": "COMP-17", "asset_type": "centrifugal_compressor", "site": "synthetic-gas-processing-site", "criticality": "high"},
+  "telemetry_window": {
+    "vibration_mm_s": {"current": 10.8, "baseline": 5.1, "trend": "rising"},
+    "bearing_temperature_c": {"current": 89.0, "baseline": 70.0, "trend": "rising"},
+    "discharge_pressure_bar": {"current": 72.0, "baseline": 74.0, "trend": "stable"}
+  },
+  "maintenance_context": {"last_service_days_ago": 143, "recent_work_orders": ["bearing inspection completed 14 months ago"], "known_failure_modes": ["bearing degradation", "misalignment", "lubrication issue"]},
+  "operating_context": {"production_priority": "high", "safety_constraint": "operator approval required before any setpoint or maintenance action"}
+}

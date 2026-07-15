@@ -1,0 +1,4 @@
+interface:
+  display_name: "Field Execution"
+  short_description: "Turn approved asset actions into field-ready work."
+  default_prompt: "Use $field-execution to prepare a field response plan."

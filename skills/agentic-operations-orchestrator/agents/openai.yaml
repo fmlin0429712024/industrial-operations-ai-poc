@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agentic Operations Orchestrator"
+  short_description: "Coordinate industrial decision workflows with human approval."
+  default_prompt: "Use $agentic-operations-orchestrator to coordinate an industrial operations case."

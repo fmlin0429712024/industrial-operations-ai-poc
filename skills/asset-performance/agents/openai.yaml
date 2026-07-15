@@ -1,0 +1,4 @@
+interface:
+  display_name: "Asset Performance"
+  short_description: "Assess asset risk and recommend maintenance actions."
+  default_prompt: "Use $asset-performance to analyze an industrial asset-risk scenario."

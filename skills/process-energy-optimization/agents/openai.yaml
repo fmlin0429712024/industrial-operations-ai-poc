@@ -1,0 +1,4 @@
+interface:
+  display_name: "Process & Energy Optimization"
+  short_description: "Evaluate safe operational optimization opportunities."
+  default_prompt: "Use $process-energy-optimization to assess an industrial process scenario."
