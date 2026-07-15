@@ -28,6 +28,20 @@ The five most visible risk signals in this POC are oil-rate decline, motor-curre
 
 For this maintenance use case, **daily scoring** is a sensible initial design. An alarm or large signal change can also trigger an on-demand score. Real-time sub-second inference is unnecessary unless the business decision itself requires immediate equipment protection.
 
+## From raw OT telemetry to a model-ready feature set
+
+The model-ready data is not a direct copy of IoT tags. It is a governed transformation that preserves asset identity, timestamps, units, quality checks, and the time window used to calculate each feature.
+
+| Raw operational source | Transformation | Model-ready feature | Why it matters |
+|---|---|---|---|
+| Oil-rate readings from the production system | Compare the current rolling value with 30 days earlier | `oil_rate_decline_30d_pct` | Detects deteriorating production performance |
+| Frequent ESP motor-current readings | Calculate variation over the latest 7 days | `motor_current_cv_7d_pct` | Detects electrical instability, not just a single current value |
+| Pump-intake-pressure readings | Calculate 30-day pressure trend | `intake_pressure_decline_30d_pct` | Detects hydraulic deterioration trend |
+| SCADA/historian alarm events | Count qualifying alarms in 30 days | `alarm_count_30d` | Captures repeated operating exceptions |
+| CMMS maintenance history | Calculate elapsed days since a verified intervention | `days_since_last_intervention` | Adds maintenance context unavailable in raw telemetry |
+
+This **model-ready feature set** is the ML equivalent of the curated, stitched data packet you call a golden set: it connects OT signals, production context, and enterprise maintenance history under one well and one observation date. For rigorous ML terminology, the locked test dataset is the evaluation “golden” benchmark; the live feature set is the governed input to the model.
+
 ## Two data lifecycles, one model
 
 | | Training data | Inference data |
