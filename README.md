@@ -44,7 +44,7 @@ flowchart TD
 | Field service management | [`field-execution`](skills/field-execution/SKILL.md) | Draft a field-ready inspection or maintenance package after approval | Dispatches people or creates production work orders |
 | Cross-domain agentic operations | [`agentic-operations-orchestrator`](skills/agentic-operations-orchestrator/SKILL.md) | Preserves case state, routes skill handoffs, enforces human approval, and records outcomes | Overrides safety or human authority |
 
-The top-level orchestration contract is in [`agents/industrial-operations-orchestrator.md`](agents/industrial-operations-orchestrator.md). Each reusable skill follows the formal Codex structure: `skills/<skill-name>/SKILL.md` plus `agents/openai.yaml` metadata.
+The project-level guide is [`AGENTS.md`](AGENTS.md). The top-level orchestration contract is in [`agents/industrial-operations-orchestrator.md`](agents/industrial-operations-orchestrator.md). Each reusable skill follows the formal Codex structure: `skills/<skill-name>/SKILL.md` plus `agents/openai.yaml` metadata.
 
 ## 3. POC architecture boundary
 
