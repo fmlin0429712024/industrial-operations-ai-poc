@@ -7,6 +7,10 @@ description: Convert an approved industrial asset recommendation into a field-re
 
 Prepare work; do not dispatch people or create a production work order without approval.
 
+## POC boundary
+
+For the ESP workflow, produce a **draft** inspection and scheduling recommendation only: suggested priority, required skills, safety prerequisites, required parts to confirm, and production-coordination constraints. Do not select a real technician, reserve a time slot, dispatch personnel, or create a work order.
+
 ## Inputs
 
 - Approved recommendation and supporting evidence.

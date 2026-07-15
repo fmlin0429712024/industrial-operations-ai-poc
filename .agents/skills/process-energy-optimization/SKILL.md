@@ -7,6 +7,10 @@ description: Evaluate industrial operating conditions and propose safe, evidence
 
 Evaluate decisions; never autonomously modify a process setpoint.
 
+## POC boundary
+
+For the ESP workflow, this skill does not solve a full production-optimization problem. It compares only two choices: continue monitoring, or plan an approved inspection during a feasible operating window. It records production, safety, and intervention trade-offs for an operator.
+
 ## Inputs
 
 - Current process conditions and trends.
