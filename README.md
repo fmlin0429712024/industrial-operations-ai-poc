@@ -2,9 +2,19 @@
 
 **OT/IT data context, asset performance, process and energy decision support, and field execution.**
 
-This dry-lab POC shows how a single industrial signal becomes an evidence-backed, human-approved field response. It uses synthetic data only. It does **not** control equipment, change process setpoints, dispatch technicians, create production work orders, or make safety decisions.
+This runnable in-silico POC shows how a single industrial signal becomes an evidence-backed, human-approved field response. It uses static synthetic data only. It does **not** connect to live equipment, control equipment, change process setpoints, dispatch technicians, create production work orders, or make safety decisions.
 
-## 1. The story: one oil-well event, one operational loop
+## 1. The operational question
+
+In upstream production, an ESP-related failure can turn a gradual change in well performance into unplanned production deferral and an expensive field intervention. Production teams need an earlier, evidence-backed way to decide which wells require attention, what evidence supports the concern, and whether an inspection should be approved.
+
+This POC focuses on that decision. It combines production telemetry, ESP operating signals, maintenance history, and operating constraints into a well-risk assessment. A supervised ML model can rank the likelihood of near-term ESP-related failure or material production loss; the surrounding workflow presents the evidence to a production engineer, preserves a human approval gate, and prepares a draft field response only when approved.
+
+The intended outcome is not autonomous control. It is earlier prioritization of high-risk wells, fewer avoidable production-deferral days, and a measurable basis for comparing the cost of intervention with the cost of inaction.
+
+The project also provides a foundation for related operational use cases, including production optimization, work-order prioritization, energy optimization, and emissions anomaly detection. The supporting trial-scoping materials are maintained in [`trial-scope/`](trial-scope/README.md).
+
+## 2. The story: one oil-well event, one operational loop
 
 An upstream oil field monitors an oil well using an electric submersible pump (ESP), a common artificial-lift system. The well's oil rate is declining while motor-current and intake-pressure signals become abnormal. The team needs to protect safe, stable production without ordering an unjustified intervention or workover.
 
@@ -35,7 +45,7 @@ flowchart TD
     class I,H control;
 ```
 
-## 2. Skills portfolio
+## 3. Skills portfolio
 
 | Business domain | Skill | Simple responsibility | Never does |
 |---|---|---|---|
@@ -46,7 +56,7 @@ flowchart TD
 
 The project-level guide is [`AGENTS.md`](AGENTS.md). The orchestration contract is in [`docs/industrial-operations-orchestrator.md`](docs/industrial-operations-orchestrator.md). Each reusable skill follows the formal Codex structure: `.agents/skills/<skill-name>/SKILL.md` plus `agents/openai.yaml` metadata.
 
-## 3. POC architecture boundary
+## 4. POC architecture boundary
 
 ```text
 PLC / sensors → SCADA, gateway, MQTT or OPC UA → historian / data platform
@@ -58,10 +68,19 @@ PLC / sensors → SCADA, gateway, MQTT or OPC UA → historian / data platform
 
 The OT layer remains the trusted source for operational signals. Existing enterprise systems remain systems of record. This POC is the governed **decision-support and workflow layer** between them.
 
-## 4. Included synthetic artifact
+## 5. Included synthetic artifact
 
 - [`data/sample-asset-signal.json`](data/sample-asset-signal.json) — one synthetic ESP-lifted oil-well case with production telemetry, intervention context, and operating constraints.
 
-## 5. What would make it production-ready
+## 6. Runnable lab components
+
+- [`ESP Risk Model`](docs/esp-risk-model.md) — supervised ML problem definition, data contract, model candidates, and quantitative evaluation plan.
+- [`Agentic Workflow Demo`](docs/agentic-workflow-demo.md) — how a Codex or Claude Code agent uses the skills to call the risk model and move an approved case through operations and field execution.
+
+## 7. What would make it production-ready
 
 Real connectors to OT/historian and CMMS systems, identity and access controls, audit storage, evaluation datasets, observability, model/version governance, and approved safety operating procedures.
+
+## 8. Trial-scoping deliverables
+
+The customer-facing upstream ESP reliability trial scope, assumptions, and final submission artifacts are maintained in [`trial-scope/`](trial-scope/README.md).
