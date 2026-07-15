@@ -4,20 +4,20 @@
 
 This dry-lab POC shows how a single industrial signal becomes an evidence-backed, human-approved field response. It uses synthetic data only. It does **not** control equipment, change process setpoints, dispatch technicians, create production work orders, or make safety decisions.
 
-## 1. The story: one compressor event, one operational loop
+## 1. The story: one oil-well event, one operational loop
 
-A high-criticality gas compressor shows rising vibration and bearing temperature. The site needs to protect production without taking an unjustified maintenance action.
+An upstream oil field monitors an oil well using an electric submersible pump (ESP), a common artificial-lift system. The well's oil rate is declining while motor-current and intake-pressure signals become abnormal. The team needs to protect safe, stable production without ordering an unjustified intervention or workover.
 
-1. **Asset performance** reviews telemetry, maintenance history, and known failure modes; it creates a risk brief rather than claiming a root cause.
-2. **Process and energy operations** checks operating constraints and the production trade-off; it does not alter a setpoint.
-3. **Human decision gate** reviews the evidence and explicitly approves, holds, or rejects the recommended response.
-4. **Field execution** creates a draft inspection or maintenance package only after approval.
+1. **Asset performance** reviews well telemetry, intervention history, and plausible artificial-lift failure modes; it creates a risk brief rather than claiming a root cause.
+2. **Production operations** checks the well's operating envelope and the production-versus-intervention trade-off; it does not alter an operating parameter.
+3. **Human decision gate** lets the production engineer and operations supervisor approve, hold, or reject the recommended response.
+4. **Field execution** creates a draft diagnostic or inspection package only after approval; it does not assume that a costly workover is justified.
 5. **Evaluation** records the outcome so later assessments can be compared with evidence.
 
 ```mermaid
 flowchart TD
     A["OT/IT context<br/>Telemetry · alarms · historian<br/>Maintenance · production context"] --> B["Asset Performance skill<br/>Risk brief + evidence"]
-    B --> C["Process & Energy skill<br/>Constraints + operating trade-offs"]
+    B --> C["Production Operations skill<br/>Operating envelope + trade-offs"]
     C --> D{"Human decision gate"}
     D -->|"Approve"| E["Field Execution skill<br/>Draft work package"]
     D -->|"Hold / reject"| F["Case record + monitoring plan"]
@@ -40,7 +40,7 @@ flowchart TD
 | Business domain | Skill | Simple responsibility | Never does |
 |---|---|---|---|
 | Asset performance management | [`asset-performance`](skills/asset-performance/SKILL.md) | Prioritize an emerging asset risk and assemble evidence | Claims a proven root cause or controls equipment |
-| Operations / process management | [`process-energy-optimization`](skills/process-energy-optimization/SKILL.md) | Compare safe process, throughput, energy, and emissions trade-offs | Changes a process setpoint |
+| Production operations / process management | [`process-energy-optimization`](skills/process-energy-optimization/SKILL.md) | Compare the operating envelope, production, energy, and constraint trade-offs | Changes an operating parameter |
 | Field service management | [`field-execution`](skills/field-execution/SKILL.md) | Draft a field-ready inspection or maintenance package after approval | Dispatches people or creates production work orders |
 | Cross-domain agentic operations | [`agentic-operations-orchestrator`](skills/agentic-operations-orchestrator/SKILL.md) | Preserves case state, routes skill handoffs, enforces human approval, and records outcomes | Overrides safety or human authority |
 
@@ -60,7 +60,7 @@ The OT layer remains the trusted source for operational signals. Existing enterp
 
 ## 4. Included synthetic artifact
 
-- [`data/sample-asset-signal.json`](data/sample-asset-signal.json) — one synthetic gas-compressor case with telemetry, maintenance context, and operating constraints.
+- [`data/sample-asset-signal.json`](data/sample-asset-signal.json) — one synthetic ESP-lifted oil-well case with production telemetry, intervention context, and operating constraints.
 
 ## 5. What would make it production-ready
 

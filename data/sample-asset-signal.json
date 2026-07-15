@@ -1,11 +1,11 @@
 {
-  "case_id": "gas-compressor-001",
-  "asset": {"asset_id": "COMP-17", "asset_type": "centrifugal_compressor", "site": "synthetic-gas-processing-site", "criticality": "high"},
+  "case_id": "oil-well-esp-001",
+  "asset": {"asset_id": "WELL-24", "asset_type": "esp_lifted_oil_well", "site": "synthetic-upstream-oil-field", "criticality": "high"},
   "telemetry_window": {
-    "vibration_mm_s": {"current": 10.8, "baseline": 5.1, "trend": "rising"},
-    "bearing_temperature_c": {"current": 89.0, "baseline": 70.0, "trend": "rising"},
-    "discharge_pressure_bar": {"current": 72.0, "baseline": 74.0, "trend": "stable"}
+    "oil_rate_bbl_d": {"current": 420, "baseline": 520, "trend": "declining"},
+    "esp_motor_current_a": {"current": 62.0, "baseline": 52.0, "trend": "unstable"},
+    "pump_intake_pressure_psi": {"current": 920, "baseline": 1080, "trend": "declining"}
   },
-  "maintenance_context": {"last_service_days_ago": 143, "recent_work_orders": ["bearing inspection completed 14 months ago"], "known_failure_modes": ["bearing degradation", "misalignment", "lubrication issue"]},
-  "operating_context": {"production_priority": "high", "safety_constraint": "operator approval required before any setpoint or maintenance action"}
+  "maintenance_context": {"last_intervention_days_ago": 418, "recent_work_orders": ["surface electrical inspection completed 11 months ago"], "known_failure_modes": ["gas interference", "scale or deposition", "electrical or motor degradation"]},
+  "operating_context": {"production_objective": "sustain safe, stable oil production", "production_priority": "high", "safety_constraint": "production-engineer approval required before any operating-parameter or intervention decision"}
 }
