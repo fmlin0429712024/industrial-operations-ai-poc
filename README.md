@@ -1,4 +1,4 @@
-# Agentic AI Solution POC — Industrial Operations Intelligence
+# Industrial Agentic AI POC — Operations Intelligence
 
 **OT/IT data context, asset performance, process and energy decision support, and field execution.**
 
