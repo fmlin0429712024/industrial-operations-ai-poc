@@ -74,8 +74,7 @@ The OT layer remains the trusted source for operational signals. Existing enterp
 
 ## 6. Runnable lab components
 
-- [`ESP Risk Model`](docs/esp-risk-model.md) — supervised ML problem definition, data contract, model candidates, and quantitative evaluation plan.
-- [`ESP Risk Modeling Lab`](ml/README.md) — runnable synthetic-data design, chronological train/validation/test split, model progression, and future FastAPI service boundary.
+- [`ESP Risk Modeling Lab`](ml/README.md) — the complete supervised-ML component: decision, synthetic data, chronological train/validation/test split, model comparison, held-out results, and future FastAPI boundary.
 - [`Agentic Workflow Demo`](docs/agentic-workflow-demo.md) — how a Codex or Claude Code agent uses the skills to call the risk model and move an approved case through operations and field execution.
 
 ## 7. What would make it production-ready

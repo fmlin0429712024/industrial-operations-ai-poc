@@ -1,0 +1,16 @@
+{
+  "case_id": "oil-well-esp-001",
+  "well_id": "WELL-024",
+  "field_id": "FIELD-01",
+  "observation_date": "2025-07-01",
+  "oil_rate_bpd": 420.0,
+  "oil_rate_decline_30d_pct": 19.2,
+  "water_cut_pct": 60.0,
+  "motor_current_a": 62.0,
+  "motor_current_cv_7d_pct": 10.5,
+  "pump_intake_pressure_psi": 920.0,
+  "intake_pressure_decline_30d_pct": 14.8,
+  "alarm_count_30d": 4,
+  "days_since_last_intervention": 418,
+  "well_age_years": 8.5
+}
