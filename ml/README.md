@@ -2,7 +2,7 @@
 
 **A small, runnable synthetic-data ML lab for prioritizing ESP-lifted oil wells for engineering review.** It demonstrates a complete predictive-maintenance lifecycle; it does not represent real-field performance or control equipment.
 
-## The decision
+## 1. Business decision
 
 At each observation date, the model answers:
 
@@ -10,7 +10,7 @@ At each observation date, the model answers:
 
 It returns a ranked **risk score** and supporting signals. It does not diagnose root cause or direct an intervention.
 
-## Operational meaning: raw IoT is not yet model input
+### Operational meaning: raw IoT is not yet model input
 
 An ESP is a downhole electric pump that helps lift produced fluids from an oil well. The operational question is whether its recent performance pattern warrants engineering attention before an avoidable production-loss event.
 
@@ -28,7 +28,7 @@ The five most visible risk signals in this POC are oil-rate decline, motor-curre
 
 For this maintenance use case, **daily scoring** is a sensible initial design. An alarm or large signal change can also trigger an on-demand score. Real-time sub-second inference is unnecessary unless the business decision itself requires immediate equipment protection.
 
-## From raw OT telemetry to a model-ready feature set
+## 2. Data boundary and model-ready feature set
 
 The model-ready data is not a direct copy of IoT tags. It is a governed transformation that preserves asset identity, timestamps, units, quality checks, and the time window used to calculate each feature.
 
@@ -42,7 +42,7 @@ The model-ready data is not a direct copy of IoT tags. It is a governed transfor
 
 This **model-ready feature set** is the ML equivalent of the curated, stitched data packet you call a golden set: it connects OT signals, production context, and enterprise maintenance history under one well and one observation date. For rigorous ML terminology, the locked test dataset is the evaluation “golden” benchmark; the live feature set is the governed input to the model.
 
-## Two data lifecycles, one model
+### Two data lifecycles, one model
 
 | | Training data | Inference data |
 |---|---|---|
@@ -54,7 +54,7 @@ This **model-ready feature set** is the ML equivalent of the curated, stitched d
 
 This distinction is fundamental: training asks, “what patterns preceded past events?” Inference asks, “does the current well resemble those patterns?”
 
-## 1. Training pipeline
+## 3. Offline model-training pipeline
 
 Training happens **offline**. It learns from a population of historical wells and produces a reusable model artifact.
 
@@ -68,7 +68,7 @@ Synthetic well history
     -> models/esp_risk_model.joblib + reports/
 ```
 
-## Training data
+### Step 1: Training data
 
 The lab trains on 120 synthetic ESP-lifted wells observed monthly for 20 months: **2,400 historical rows**. The end-to-end workflow still demonstrates one well case; the ML model needs the wider well population to learn a generalizable pattern. A real implementation would normally use 12-24 months of governed historical data, with verified maintenance and production-loss outcomes.
 
@@ -81,7 +81,7 @@ The lab trains on 120 synthetic ESP-lifted wells observed monthly for 20 months:
 
 The synthetic label is intentionally transparent: declining oil rate, unstable current, falling intake pressure, repeated alarms, and long time since intervention increase risk, with controlled noise. No data represents a real field or a production physics model.
 
-## Training, validation, and test
+### Step 2: Training, validation, and test
 
 The chronological split prevents future leakage: months 1-14 train, 15-17 validate, and 18-20 remain untouched for test.
 
@@ -100,7 +100,7 @@ The validation set selected **logistic regression**. The held-out test result is
 
 These results validate the synthetic lab pipeline only. A real trial would replace the generator with governed historical data and re-estimate every measure.
 
-Run the training pipeline locally:
+### Run the training pipeline locally
 
 ```bash
 python3 -m venv ml/.venv
@@ -111,7 +111,7 @@ LOKY_MAX_CPU_COUNT=4 ml/.venv/bin/python ml/src/train_model.py
 
 The command generates the model, risk scores, validation comparison, metrics, and calibration table. Small human-readable reports and the safe synthetic model artifact are versioned for review; raw generated history and the local virtual environment are excluded from Git.
 
-## 2. Inference pipeline
+## 4. Online inference pipeline
 
 Inference happens **per well case**. It does not retrain the model.
 
@@ -125,7 +125,7 @@ Current well JSON / future OT feature pack
     -> future agent tool call / skills orchestration
 ```
 
-## Score one well
+### Step 1: Score one well
 
 `score_case.py` is the model tool that a workflow agent will call. It scores the static `WELL-024` request and returns a risk tier, deterministic signal evidence, and a review recommendation.
 
@@ -141,7 +141,7 @@ cd ml
 # POST /risk-score using data/well_24_score_request.json
 ```
 
-## See the model react to two cases
+### Step 2: See the model react to two cases
 
 The two static requests below are intentionally simple teaching examples, not real well records:
 
@@ -154,7 +154,7 @@ Run both through the same trained model:
 ml/.venv/bin/python ml/src/demo_inference.py
 ```
 
-## Structure and next boundary
+## 5. Components and extension boundary
 
 ```text
 ml/
