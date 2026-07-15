@@ -10,6 +10,36 @@ At each observation date, the model answers:
 
 It returns a ranked **risk score** and supporting signals. It does not diagnose root cause or direct an intervention.
 
+## Operational meaning: raw IoT is not yet model input
+
+An ESP is a downhole electric pump that helps lift produced fluids from an oil well. The operational question is whether its recent performance pattern warrants engineering attention before an avoidable production-loss event.
+
+The model does **not** score each raw sensor message independently. In a real field, a historian receives frequent motor-current, intake-pressure, and production measurements. A feature job summarizes the most recent windows before scoring:
+
+```text
+Raw OT telemetry (for example, every 1-5 minutes)
+    -> historian / time-series store
+    -> rolling features: 7-day variability, 30-day decline, alarm count
+    -> daily or event-triggered risk score
+    -> production-engineer review when risk is high
+```
+
+The five most visible risk signals in this POC are oil-rate decline, motor-current variability, intake-pressure decline, alarm count, and time since the last intervention. Current levels, water cut, and well age provide additional operating context. The static JSON request used by this lab already contains those calculated features; it represents the latest available feature window, not one instant of raw telemetry.
+
+For this maintenance use case, **daily scoring** is a sensible initial design. An alarm or large signal change can also trigger an on-demand score. Real-time sub-second inference is unnecessary unless the business decision itself requires immediate equipment protection.
+
+## Two data lifecycles, one model
+
+| | Training data | Inference data |
+|---|---|---|
+| **Purpose** | Teach the model historical patterns that preceded known outcomes | Score one active well using its latest operating pattern |
+| **Scope in this POC** | 120 comparable wells × 20 monthly observations | One well, represented by its latest 7-day and 30-day feature windows |
+| **Contents** | Features **plus** known 30-day outcome label | The same features, but the future outcome is not yet known |
+| **When used** | Offline, periodically when verified new outcomes are available | Daily or when a material alarm/event triggers a review |
+| **Output** | Versioned model artifact and evaluation evidence | Risk score, evidence, and engineer-review recommendation |
+
+This distinction is fundamental: training asks, “what patterns preceded past events?” Inference asks, “does the current well resemble those patterns?”
+
 ## 1. Training pipeline
 
 Training happens **offline**. It learns from a population of historical wells and produces a reusable model artifact.
@@ -26,7 +56,7 @@ Synthetic well history
 
 ## Training data
 
-The lab trains on 120 synthetic ESP-lifted wells observed monthly for 20 months: **2,400 historical rows**. The end-to-end workflow still demonstrates one well case; the ML model needs the wider well population to learn a generalizable pattern.
+The lab trains on 120 synthetic ESP-lifted wells observed monthly for 20 months: **2,400 historical rows**. The end-to-end workflow still demonstrates one well case; the ML model needs the wider well population to learn a generalizable pattern. A real implementation would normally use 12-24 months of governed historical data, with verified maintenance and production-loss outcomes.
 
 | Data group | Included signals |
 |---|---|
