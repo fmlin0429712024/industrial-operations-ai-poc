@@ -1,0 +1,4 @@
+model,threshold,roc_auc,average_precision,precision,recall,f1,false_alert_rate,brier_score,prediction_horizon_days,precision_at_10,recall_at_10,alerts_reviewed_per_period
+logistic_regression,0.6,0.7657,0.3649,0.3647,0.5962,0.4526,0.15,0.2025,30,0.4,0.2308,10
+gradient_boosted_trees,0.3,0.7128,0.3106,0.371,0.4423,0.4035,0.1083,0.118,30,0.3333,0.1923,10
+rule_baseline,0.05,0.7298,0.2834,0.2671,0.75,0.3939,0.2972,0.1151,30,0.4667,0.2692,10

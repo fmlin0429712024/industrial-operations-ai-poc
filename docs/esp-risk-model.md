@@ -54,6 +54,7 @@ Once implemented, this page will link to:
 - synthetic training and holdout datasets;
 - a reproducible training command;
 - a serialized model or deterministic training artifact;
-- evaluation metrics and plots; and
+- evaluation metrics and calibration data; and
 - one sample risk-score response consumed by the agentic workflow.
 
+The first runnable implementation and its generated output locations are documented in [`ml/README.md`](../ml/README.md).
