@@ -39,17 +39,13 @@ The model does **not** receive raw IoT messages. It receives one daily, feature-
 
 ```mermaid
 flowchart LR
-    A["Telemetry sample<br/>every 5 minutes<br/>{<br/>well_id: WELL-024<br/>time: 10:05<br/>motor_current_a: 61.8<br/>oil_rate_bpd: 420<br/>}"] --> T["Daily feature engineering<br/>Quality checks<br/>7-day variability<br/>30-day trends"]
-    M["Maintenance / alarm sample<br/>{<br/>well_id: WELL-024<br/>last_intervention_days: 418<br/>recent_alarm: high current<br/>}"] --> T
-    T --> C["Model-ready daily record<br/>one well · one date<br/>{<br/>well_id: WELL-024<br/>date: 2026-07-15<br/>motor_current_cv_7d_pct: 10.5<br/>oil_rate_decline_30d_pct: 19.2<br/>alarm_count_30d: 4<br/>}"]
-    C --> D["ML inference"]
+    A["Telemetry sample<br/>Well: WELL-024<br/>Time: 10:05<br/>Motor current: 61.8 A<br/>Oil rate: 420 BPD<br/><br/>Raw JSON · every 5 minutes"] -->|"Daily feature transformation"| C["Daily feature file<br/>Well: WELL-024<br/>Date: 2026-07-15<br/>Current variability, 7d: 10.5%<br/>Oil-rate decline, 30d: 19.2%<br/>Alarm count, 30d: 4<br/><br/>Feature JSON / CSV · daily<br/>Input to ML inference"]
+    M["Maintenance / alarm sample<br/>Well: WELL-024<br/>Last intervention: 418 days<br/>Recent alarm: high current<br/><br/>Event JSON · when recorded"] --> C
 
     classDef source fill:#f3f4f6,stroke:#6b7280,color:#111827;
-    classDef transform fill:#ede9fe,stroke:#7c3aed,color:#111827;
-    classDef model fill:#dbeafe,stroke:#2563eb,color:#111827;
+    classDef feature fill:#ede9fe,stroke:#7c3aed,color:#111827;
     class A,M source;
-    class T,C transform;
-    class D model;
+    class C feature;
 ```
 
 The left side is a stream of narrow operational events. The right side is the single daily record passed to inference: it combines current readings, recent variability, longer-term trends, alarms, and maintenance context.
