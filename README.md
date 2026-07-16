@@ -4,22 +4,26 @@
 
 ## 30-second overview
 
-An upstream operator scores each active ESP-lifted oil well at the end of the production day. A high-risk signal does **not** control equipment or order a replacement. It gives an Asset / Production Engineer evidence to review. Only an approved inspection creates a synthetic field ticket; the Field Engineer's outcome closes the case and becomes evaluation evidence.
+An upstream operator scores each active ESP-lifted oil well at the end of the production day. The input is a **feature-engineered daily batch** derived from IoT and maintenance data—not raw IoT messages. A high-risk signal does **not** control equipment or order a replacement. It gives an Asset Manager evidence to review. Only an approved inspection creates a synthetic field ticket; the Service Engineer's outcome closes the case and becomes evaluation evidence.
 
 ```mermaid
 flowchart TD
-    A["1. Daily feature pack<br/>Governed OT + maintenance context"] --> B["2. Asset performance score<br/>ML risk score + evidence"]
-    B --> C{"3. Asset / Production Engineer<br/>human decision"}
+    A[("🧩 1. Feature-engineered daily batch<br/>Derived from IoT + maintenance data<br/>Not raw IoT messages")] --> B["2. Asset performance score<br/>ML risk score + evidence"]
+    B --> C{"3. Human decision"}
+    P1["👤 Asset Manager<br/>Reviews evidence and approves inspection"] --> C
     C -->|"Monitor / hold"| D["Close monitoring case<br/>No ticket"]
     C -->|"Approve inspection"| E["4. Synthetic field-service ticket<br/>Diagnostic scope"]
-    E --> F["5. Field Engineer closes ticket<br/>Outcome + evaluation record"]
+    E --> P2["👷 Service Engineer<br/>Performs diagnostic service"]
+    P2 --> F["5. Close ticket<br/>Outcome + evaluation record"]
 
+    classDef data fill:#ede9fe,stroke:#7c3aed,color:#111827;
     classDef model fill:#dbeafe,stroke:#2563eb,color:#111827;
     classDef gate fill:#fef3c7,stroke:#d97706,color:#111827;
     classDef ticket fill:#dcfce7,stroke:#16a34a,color:#111827;
-    class A,B model;
+    class A data;
+    class B model;
     class C gate;
-    class E,F ticket;
+    class E,F,P2 ticket;
 ```
 
 ## Two test scenarios
