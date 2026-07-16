@@ -63,7 +63,6 @@ The output is a risk score, tier, and visible supporting signals—not a root-ca
 The model is only the first step. The workflow preserves the same `case_id` through scoring, human approval, synthetic ticket creation, field closure, and evaluation. The formal skills define each handoff; the local state-machine runner makes the workflow repeatable for both high-risk and healthy cases.
 
 - [Workflow implementation and skill mapping](WORKFLOW.md)
-- [Runnable workflow state machine](src/workflow_runner.py)
 
 ## POC boundary
 
