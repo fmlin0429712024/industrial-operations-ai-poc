@@ -1,89 +1,44 @@
 # Industrial Agentic AI POC — Operations Intelligence
 
-**OT/IT data context, asset performance, and governed field-service response.**
+**A runnable, synthetic POC for turning early ESP risk signals into a governed field-service response.**
 
-This runnable in-silico POC shows how a single industrial signal becomes an evidence-backed, human-approved field response. It uses static synthetic data only. It does **not** connect to live equipment, control equipment, change process setpoints, dispatch technicians, create production work orders, or make safety decisions.
+## 30-second overview
 
-## 1. The operational question
-
-In upstream production, an ESP-related failure can turn a gradual change in well performance into unplanned production deferral and an expensive field intervention. Production teams need an earlier, evidence-backed way to decide which wells require attention, what evidence supports the concern, and whether an inspection should be approved.
-
-This POC focuses on that decision. It combines production telemetry, ESP operating signals, maintenance history, and operating constraints into a well-risk assessment. A supervised ML model can rank the likelihood of near-term ESP-related failure or material production loss; the surrounding workflow presents the evidence to an Asset / Production Engineer, preserves a human approval gate, and creates a synthetic diagnostic field ticket only when approved.
-
-The intended outcome is not autonomous control. It is earlier prioritization of high-risk wells, fewer avoidable production-deferral days, and a measurable basis for comparing the cost of intervention with the cost of inaction.
-
-The project also provides a foundation for related operational use cases, including production optimization, work-order prioritization, energy optimization, and emissions anomaly detection. The supporting trial-scoping materials are maintained in [`trial-scope/`](trial-scope/README.md).
-
-## 2. The story: one oil-well event, one operational loop
-
-An upstream oil field monitors an oil well using an electric submersible pump (ESP), a common artificial-lift system. The well's oil rate is declining while motor-current and intake-pressure signals become abnormal. The team needs to protect safe, stable production without ordering an unjustified intervention or workover.
-
-1. **Asset performance** scores the latest model-ready well data and creates a risk brief rather than claiming a root cause.
-2. **Human decision gate** lets an Asset / Production Engineer approve, hold, or reject a diagnostic inspection.
-3. **Field service** creates a synthetic diagnostic ticket only after approval.
-4. **Field Engineer** records a synthetic outcome and closes the ticket.
-5. **Evaluation** records the outcome so later assessments can be compared with evidence.
+An upstream operator scores each active ESP-lifted oil well at the end of the production day. A high-risk signal does **not** control equipment or order a replacement. It gives an Asset / Production Engineer evidence to review. Only an approved inspection creates a synthetic field ticket; the Field Engineer's outcome closes the case and becomes evaluation evidence.
 
 ```mermaid
 flowchart TD
-    A["OT/IT context<br/>Telemetry · alarms · historian<br/>Maintenance · production context"] --> F0["Governed feature job<br/>Daily 17:00 local POC cadence"]
-    F0 --> B["1. Asset Performance skill<br/>Risk brief + evidence"]
-    B --> D{"2. Human decision gate"}
-    D -->|"Approve"| E["3. Field-service skill<br/>Synthetic diagnostic ticket"]
-    D -->|"Hold / reject"| F["Closed monitoring case"]
-    E --> G["4. Field Engineer<br/>Synthetic outcome + close ticket"]
-    F --> H["5. Evaluation record"]
-    G --> H
-    H --> I["Orchestrator<br/>traceability + learning"]
-    I --> B
+    A["1. Daily feature pack<br/>Governed OT + maintenance context"] --> B["2. Asset performance score<br/>ML risk score + evidence"]
+    B --> C{"3. Asset / Production Engineer<br/>human decision"}
+    C -->|"Monitor / hold"| D["Close monitoring case<br/>No ticket"]
+    C -->|"Approve inspection"| E["4. Synthetic field-service ticket<br/>Diagnostic scope"]
+    E --> F["5. Field Engineer closes ticket<br/>Outcome + evaluation record"]
 
-    classDef skill fill:#dbeafe,stroke:#2563eb,color:#111827;
+    classDef model fill:#dbeafe,stroke:#2563eb,color:#111827;
     classDef gate fill:#fef3c7,stroke:#d97706,color:#111827;
-    classDef control fill:#e5e7eb,stroke:#4b5563,color:#111827;
-    class B,E skill;
-    class D gate;
-    class I,H control;
+    classDef ticket fill:#dcfce7,stroke:#16a34a,color:#111827;
+    class A,B model;
+    class C gate;
+    class E,F ticket;
 ```
 
-## 3. Skills portfolio
+## Two test scenarios
 
-| Business domain | Skill | Simple responsibility | Never does |
-|---|---|---|---|
-| Asset performance management | [`asset-performance`](.agents/skills/asset-performance/SKILL.md) | Prioritize an emerging asset risk and assemble evidence | Claims a proven root cause or controls equipment |
-| Production operations / process management | [`process-energy-optimization`](.agents/skills/process-energy-optimization/SKILL.md) | Future capability; not required for the narrow ESP reliability demo | Changes an operating parameter |
-| Field service management | [`field-execution`](.agents/skills/field-execution/SKILL.md) | Create and close a synthetic diagnostic ticket after approval | Dispatches people, purchases equipment, or creates production work orders |
-| Cross-domain agentic operations | [`agentic-operations-orchestrator`](.agents/skills/agentic-operations-orchestrator/SKILL.md) | Preserves case state, routes skill handoffs, enforces human approval, and records outcomes | Overrides safety or human authority |
+| Synthetic well | What the model finds | Workflow result |
+|---|---|---|
+| `WELL-025` | Stable operating pattern: `monitor` | Monitoring case closes; no ticket |
+| `WELL-024` | High ESP-related production-loss risk | Engineer approval → synthetic diagnostic ticket → simulated field outcome → evaluation record |
 
-The project-level guide is [`AGENTS.md`](AGENTS.md). The sole POC workflow contract is [`WORKFLOW.md`](WORKFLOW.md). Each reusable skill follows the formal Codex structure: `.agents/skills/<skill-name>/SKILL.md` plus `agents/openai.yaml` metadata.
+## What is implemented
 
-## 4. POC architecture boundary
+| Component | What it demonstrates | Detail |
+|---|---|---|
+| ESP risk model | Synthetic training, chronological train/validation/test split, local inference, and model evidence | [ML Lab](ml/README.md) |
+| Governed workflow | Skills, state transitions, human approval gate, synthetic ticket lifecycle, and outcome record | [Workflow implementation](WORKFLOW.md) |
+| Runnable demo | Replays the high-risk and healthy scenarios locally | [Workflow runner](src/workflow_runner.py) |
 
-```text
-PLC / sensors → SCADA, gateway, MQTT or OPC UA → historian / data platform
-                                                   ↓
-                           this POC: skills + orchestrator + human decision gate
-                                                   ↓
-                                  CMMS/EAM or field-service system (future connector)
-```
+## POC boundary
 
-The OT layer remains the trusted source for operational signals. Existing enterprise systems remain systems of record. This POC is the governed **decision-support and workflow layer** between them.
+All data, scores, tickets, approvals, and field outcomes are synthetic. This POC does not connect to live OT equipment or a CMMS, dispatch technicians, purchase equipment, change operating settings, or make safety decisions.
 
-## 5. Included synthetic artifact
-
-- [`data/sample-asset-signal.json`](data/sample-asset-signal.json) — high-risk synthetic workflow context; it references the matching ML feature pack rather than duplicating it.
-- [`data/sample-healthy-asset-signal.json`](data/sample-healthy-asset-signal.json) — healthy synthetic workflow context for the monitor-only path.
-- [`ml/data/inference/`](ml/data/inference/) — the two model-ready feature packs used by the ML scorer. The full training/validation/test data contract is in the [ML Lab](ml/README.md).
-
-## 6. Runnable lab components
-
-- [`ESP Risk Modeling Lab`](ml/README.md) — the complete supervised-ML component: decision, synthetic data, chronological train/validation/test split, model comparison, held-out results, and future FastAPI boundary.
-- [`ESP Risk-to-Response Workflow`](WORKFLOW.md) — how a Codex or Claude Code agent uses the skills to call the risk model and move an approved case through operations and field execution.
-- [`src/workflow_runner.py`](src/workflow_runner.py) — runnable, deterministic POC test harness for the same workflow contract; it demonstrates high-risk, monitor-only, and explicit-approval paths.
-
-## 7. What would make it production-ready
-
-Real connectors to OT/historian and CMMS systems, identity and access controls, audit storage, evaluation datasets, observability, model/version governance, and approved safety operating procedures.
-
-## 8. Trial-scoping deliverables
-
-The customer-facing upstream ESP reliability trial scope, assumptions, and final submission artifacts are maintained in [`trial-scope/`](trial-scope/README.md).
+The broader upstream trial scope and assumptions are in [`trial-scope/`](trial-scope/README.md). Future portfolio capabilities—such as production optimization, work-order prioritization, energy optimization, and emissions anomaly detection—are intentionally outside this narrow runnable workflow.

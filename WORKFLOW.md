@@ -36,6 +36,18 @@ The exact schedule is a client operating decision. The POC uses 17:00 only as a 
 
 The separate `process-energy-optimization` skill remains a future portfolio capability. It is not a required node in this deliberately narrow ESP reliability demo.
 
+## Implementation mapping
+
+This is the technical view behind the five-step user journey on the project README.
+
+| User-facing step | Skill / component | POC implementation |
+|---|---|---|
+| Daily feature pack and score | [`asset-performance`](.agents/skills/asset-performance/SKILL.md) + ML tool | `score_case.py` loads the trained model and produces risk score plus evidence |
+| Human decision | [`agentic-operations-orchestrator`](.agents/skills/agentic-operations-orchestrator/SKILL.md) | Case state remains `under_review` until named approval is supplied |
+| Field ticket | [`field-execution`](.agents/skills/field-execution/SKILL.md) | Creates a synthetic `open` diagnostic ticket after approval |
+| Field closure | Field Engineer persona | Records a simulated `esp_replaced` or `no_fault_found` outcome |
+| Evaluation | Orchestrator case record | Persists the score, decision, ticket, and outcome under one `case_id` |
+
 ## Risk-score tool contract
 
 The asset-performance step calls the ML inference service:
