@@ -61,6 +61,21 @@ This is a supervised classification problem: predict whether a well has elevated
 - **Offline training — completed:** The lab generates 2,400 synthetic historical daily records, splits them chronologically into train / validation / test sets, and compares an operating-rule baseline, logistic regression, and gradient-boosted trees. Validation selects the logistic-regression model and decision threshold; a held-out test set completes the final check.
 - **Reusable artifact:** Training produces a versioned `esp_risk_model.joblib` file plus compact evaluation reports. The model is interpretable and intentionally small for this POC; the same service boundary can later host a different validated model.
 
+```mermaid
+flowchart LR
+    A["1. Historical daily features<br/>2,400 synthetic records"] --> B["2. Chronological split<br/>Train · validate · test"]
+    B --> C["3. Train candidates<br/>Rule · Logistic · Trees"]
+    C --> D["4. Validate<br/>Select model + threshold"]
+    D --> E["5. Held-out test<br/>Versioned model artifact"]
+
+    classDef data fill:#ede9fe,stroke:#7c3aed,color:#111827;
+    classDef model fill:#dbeafe,stroke:#2563eb,color:#111827;
+    classDef result fill:#dcfce7,stroke:#16a34a,color:#111827;
+    class A,B data;
+    class C,D model;
+    class E result;
+```
+
 The output is a risk score, tier, and visible supporting signals—not a root-cause diagnosis. [See the runnable ML Lab.](ml/README.md)
 
 ## 5. End-to-End Solution Workflow
@@ -69,6 +84,32 @@ The trained model is only the first step.
 
 - **Online inference — tested:** A daily feature file is sent to the local FastAPI `POST /risk-score` endpoint. The endpoint loads the trained model and returns the score, tier, and supporting evidence without duplicating model logic.
 - **Governed response:** The workflow preserves the same `case_id` through scoring, human approval, synthetic ticket creation, field closure, and evaluation. A high score requests review; it never authorizes field work by itself.
+
+```mermaid
+flowchart LR
+    subgraph O["Agentic Operations Orchestrator — case ID, evidence, approval"]
+        A["Operational feature engineering<br/>Daily model-ready record"] --> B["Asset performance<br/>Calls ML risk-score tool"]
+        B --> C{"Named human<br/>approval"}
+        C -->|"Approved"| D["Field execution<br/>Synthetic ticket"]
+        C -->|"No action"| E["Monitor"]
+        D --> F["Field outcome<br/>Evaluation evidence"]
+    end
+
+    classDef skill fill:#ede9fe,stroke:#7c3aed,color:#111827;
+    classDef gate fill:#fff1f2,stroke:#e11d48,color:#9f1239,stroke-width:2px;
+    classDef action fill:#dcfce7,stroke:#16a34a,color:#111827;
+    class A,B,D skill;
+    class C gate;
+    class E,F action;
+```
+
+| Component | Responsibility |
+|---|---|
+| [Operational feature engineering](.agents/skills/operational-feature-engineering/SKILL.md) | Convert governed telemetry and maintenance events into one daily model-ready record. |
+| [Asset performance](.agents/skills/asset-performance/SKILL.md) | Call the ML risk-score tool and assemble an evidence-backed risk brief. |
+| [Agentic operations orchestrator](.agents/skills/agentic-operations-orchestrator/SKILL.md) | Preserve case state, evidence, approval, and handoffs. |
+| [Field execution](.agents/skills/field-execution/SKILL.md) | Create and close a synthetic diagnostic ticket only after approval. |
+| ML risk-score tool | A deterministic FastAPI service, not a skill; it can be replaced without changing the business workflow. |
 
 - [Workflow implementation and skill mapping](WORKFLOW.md)
 
