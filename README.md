@@ -35,16 +35,36 @@ flowchart TD
 
 ## 3. Data Gathering and Feature Engineering
 
-The model receives a governed, feature-engineered daily batch—not raw IoT messages. Raw telemetry is frequent and narrow; the daily batch creates one coherent view of one well, one observation date, and its recent operating history.
+The model does **not** receive raw IoT messages. Telemetry arrives continuously, but a daily feature job applies quality checks and computes a governed feature record for each well using the latest 7-day and 30-day operating history.
 
-| Raw OT / IT input | Example | Feature-engineered daily batch | Why it is useful |
-|---|---|---|---|
-| ESP motor-current readings | `WELL-024 · 10:05 · 61.8 A` | `motor_current_cv_7d_pct: 10.5` | Captures instability over time, not one reading |
-| Production readings | `WELL-024 · 10:05 · 420 BPD` | `oil_rate_decline_30d_pct: 19.2` | Captures deterioration trend |
-| Pump-intake-pressure readings | `WELL-024 · 10:05 · 920 PSI` | `intake_pressure_decline_30d_pct: 14.8` | Captures hydraulic trend |
-| Alarm and maintenance history | Alarm events and last intervention date | `alarm_count_30d: 4` and `days_since_last_intervention: 418` | Adds operating and maintenance context |
+```mermaid
+flowchart LR
+    A[("Raw telemetry<br/>Real-time IoT readings")] --> B["Daily feature engineering<br/>Quality · align · compute trends"]
+    M[("Maintenance + alarm history")] --> B
+    B --> C[("Model-ready daily record<br/>One well · one date · one feature set")]
+    C --> D["ESP risk model"]
 
-For model development, the POC uses synthetic historical data with a chronological train / validation / test split. For daily scoring, it uses an unlabeled feature pack for the active well.
+    classDef raw fill:#f3f4f6,stroke:#6b7280,color:#111827;
+    classDef feature fill:#ede9fe,stroke:#7c3aed,color:#111827;
+    classDef model fill:#dbeafe,stroke:#2563eb,color:#111827;
+    class A,M raw;
+    class B,C feature;
+    class D model;
+```
+
+### What the data looks like
+
+| Real-time raw telemetry | Daily model-ready feature record |
+|---|---|
+| `10:05 · WELL-024 · motor_current_a · 61.8` | `WELL-024 · 2026-07-15 · motor_current_cv_7d_pct: 10.5` |
+| `10:10 · WELL-024 · oil_rate_bpd · 420` | `oil_rate_decline_30d_pct: 19.2` |
+| `10:15 · WELL-024 · intake_pressure_psi · 920` | `intake_pressure_decline_30d_pct: 14.8` |
+| `Alarm event · WELL-024 · timestamp` | `alarm_count_30d: 4` |
+| `Maintenance event · WELL-024 · close date` | `days_since_last_intervention: 418` |
+
+The left side is a stream of narrow events. The right side is the single daily input record used by the prediction model: it turns current levels, recent variability, longer-term trends, alarms, and maintenance context into a coherent decision input.
+
+For model development, the POC uses synthetic historical daily records with a chronological train / validation / test split. For daily scoring, the record is unlabeled because the next 30-day outcome has not happened yet.
 
 ## 4. Machine Learning Approach
 
