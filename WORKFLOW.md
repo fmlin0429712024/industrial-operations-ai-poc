@@ -1,15 +1,14 @@
 # ESP Risk-to-Response Workflow
 
-This is the deliberately small, runnable workflow for the Industrial Operations AI POC. It demonstrates end-to-end handoffs without claiming live OT control, automated work-order creation, or autonomous field dispatch.
+This is the deliberately small, runnable workflow for the Industrial Operations AI POC. It demonstrates an asset-performance decision and a governed synthetic field-ticket lifecycle. It does not claim live OT control, a real CMMS integration, autonomous field dispatch, procurement, or real equipment changes.
 
 ```text
 Model-ready WELL-024 feature set
     -> risk-score service
     -> asset-performance risk brief
-    -> process-impact assessment
     -> named human decision gate
-    -> draft field inspection / scheduling package
-    -> simulated outcome and evaluation record
+    -> synthetic diagnostic field ticket
+    -> synthetic field closure and evaluation record
 ```
 
 ## Operating cadence (POC assumption)
@@ -25,15 +24,17 @@ The default operating model is a **daily batch decision-support job**, not a rea
 
 The exact schedule is a client operating decision. The POC uses 17:00 only as a concrete, post-production-day assumption.
 
-## Handoff contract
+## Five-step handoff contract
 
-| Step | Owner skill | Input | Simplified POC responsibility | Output |
-|---|---|---|---|---|
-| 1 | Asset performance | Model-ready feature set | Call the risk-score tool and assemble evidence; state uncertainty | Risk brief and proposed next step |
-| 2 | Process and energy optimization | Risk brief and operating context | Compare continued monitoring with a planned inspection window; identify production and safety constraints | Operator-review recommendation |
-| 3 | Human decision gate | Both assessments | Approve, hold, or reject a draft inspection response | Named decision and timestamp |
-| 4 | Field execution | Approved decision and asset context | Produce a draft inspection package and suggested scheduling constraints | Draft work package; no dispatch |
-| 5 | Operations orchestrator | All case records plus outcome | Preserve traceability and record whether the signal was useful | Evaluation record |
+| Step | Owner / persona | Simplified POC responsibility | Output |
+|---|---|---|---|
+| 1 | Asset-performance skill | Score the daily model-ready feature pack and assemble evidence | `monitor` case or `under_review` risk brief |
+| 2 | Asset / Production Engineer | Approve, hold, or reject diagnostic inspection | Named decision and timestamp |
+| 3 | Field-execution skill | After approval, create a **synthetic** diagnostic ticket | Open ticket with scope and assigned role |
+| 4 | Field Engineer | Record a simulated outcome and close the synthetic ticket | Closed ticket: `esp_replaced` or `no_fault_found` |
+| 5 | Orchestrator | Preserve evidence and connect verified outcome to evaluation | Closed case and evaluation record |
+
+The separate `process-energy-optimization` skill remains a future portfolio capability. It is not a required node in this deliberately narrow ESP reliability demo.
 
 ## Risk-score tool contract
 
@@ -59,8 +60,9 @@ The agent records the model score as evidence. It does not treat that score as a
 |---|---|
 | Risk tier is `monitor` | Record result and continue monitoring |
 | Risk tier is `high` | Prepare a risk brief and request production-engineer review |
-| Engineer approves an inspection | Prepare a draft field package with required safety and production coordination |
-| Engineer holds or rejects | Record rationale and monitoring plan; no field package |
+| Engineer approves an inspection | Create a synthetic diagnostic field ticket; no procurement or real dispatch |
+| Field Engineer closes ticket | Record `esp_replaced` or `no_fault_found` and create evaluation evidence |
+| Engineer holds or rejects | Record rationale and monitoring plan; no ticket |
 
 ## Required case record
 
@@ -68,19 +70,28 @@ Every handoff keeps the same `case_id` and records source references, model vers
 
 ## Runnable local workflow demo
 
-`src/workflow_runner.py` is a deterministic test harness for this contract. It is not a production agent runtime. It proves that the workflow context references the **same model-ready feature pack** used by the ML scorer and that a high-risk case cannot create even a draft field package without an explicit named approval.
+`src/workflow_runner.py` is a deterministic state-machine test harness for this contract. It is not a production agent runtime. It proves that the workflow context references the **same model-ready feature pack** used by the ML scorer and that a high-risk case cannot create a synthetic ticket without an explicit named approval.
 
 ```bash
-# High-risk WELL-024: stops at the human-decision gate.
-ml/.venv/bin/python src/workflow_runner.py
+# 1. High-risk WELL-024: daily batch creates an under-review case.
+ml/.venv/bin/python src/workflow_runner.py start \
+  --state outputs/well-024-case.json
 
-# Healthy WELL-025: records monitoring only.
-ml/.venv/bin/python src/workflow_runner.py \
-  --case data/sample-healthy-asset-signal.json
+# 2. Named human approval creates a synthetic diagnostic ticket.
+ml/.venv/bin/python src/workflow_runner.py approve \
+  --state outputs/well-024-case.json \
+  --approver "Asset / Production Engineer (synthetic)"
 
-# High-risk WELL-024: explicitly simulate an approved diagnostic inspection.
-ml/.venv/bin/python src/workflow_runner.py \
-  --approve-inspection --approver "Production Engineer (synthetic)"
+# 3. Field Engineer closes the synthetic ticket; no real equipment is changed.
+ml/.venv/bin/python src/workflow_runner.py close \
+  --state outputs/well-024-case.json \
+  --field-engineer "Field Engineer (synthetic)" \
+  --outcome esp_replaced
+
+# Healthy WELL-025: batch run closes with monitoring only; no ticket.
+ml/.venv/bin/python src/workflow_runner.py start \
+  --case data/sample-healthy-asset-signal.json \
+  --state outputs/well-025-case.json
 ```
 
 In an agent-assisted demo, Codex or Claude Code reads the four `SKILL.md` files, calls the same risk-score tool, and follows this handoff contract. A future ADK or other agent runtime would replace this test harness—not the domain contracts or approval boundary.

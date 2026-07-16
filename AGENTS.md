@@ -19,13 +19,13 @@ README.md                       # Business story, architecture, and POC boundary
 
 - `asset-performance`: assess asset/well risk from evidence.
 - `process-energy-optimization`: evaluate operating-envelope trade-offs.
-- `field-execution`: prepare a draft field package after approval.
+- `field-execution`: create and close a synthetic diagnostic ticket after approval.
 - `agentic-operations-orchestrator`: preserve case state, enforce handoffs and approval, and record outcomes. Project-level `WORKFLOW.md` is the sole POC workflow contract.
 
 ## Safety and governance
 
 - Never control equipment or change production parameters.
-- Never create a production work order or dispatch field staff.
+- Never create a production work order, dispatch field staff, or purchase equipment.
 - Preserve source references, uncertainty, approval, and outcome under one `case_id`.
 
 ## Portability principle
