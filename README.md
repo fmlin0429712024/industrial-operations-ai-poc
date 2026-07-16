@@ -64,8 +64,4 @@ The model is only the first step. The workflow preserves the same `case_id` thro
 
 - [Workflow implementation and skill mapping](WORKFLOW.md)
 
-## POC boundary
-
-All data, scores, tickets, approvals, and field outcomes are synthetic. This POC does not connect to live OT equipment or a CMMS, dispatch technicians, purchase equipment, change operating settings, or make safety decisions.
-
-The broader upstream trial scope and assumptions are in [`trial-scope/`](trial-scope/README.md). Use-case selection and client-specific economic impact belong in a separate customer trial-scoping deck, not in this reusable POC.
+**POC boundary.** All data and outcomes are synthetic. This project provides decision support only and does not connect to live equipment, CMMS, or field operations.
