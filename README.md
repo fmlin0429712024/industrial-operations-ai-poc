@@ -1,14 +1,14 @@
-# Industrial Agentic AI POC — Operations Intelligence
+# Asset Performance AI — ESP Predictive Maintenance (Upstream Oil & Gas)
 
-**A runnable, synthetic POC for turning early ESP risk signals into a governed field-service response.**
+*A runnable, governed POC: from early ESP risk signals to a human-approved field-service response.*
 
 ## 1. Executive Summary
 
-Industrial operations are a classic Industry 4.0 OT/IT transformation problem: high-volume operational telemetry lives alongside production, maintenance, and field-service information, but decisions still depend on fragmented evidence and manual coordination.
+Asset performance is a classic upstream OT/IT transformation problem: high-volume operational telemetry lives alongside production, maintenance, and field-service information, but reliability decisions still depend on fragmented evidence and manual coordination.
 
-This public POC uses synthetic data to demonstrate a modern AI pattern for that environment: convert raw OT signals into a governed feature set, apply a purpose-built ML model, and route the resulting evidence through a human-approved operational workflow. It provides decision support—not a generic chatbot, live equipment control, or field execution.
+This public POC uses synthetic data to demonstrate an Asset Performance → Reliability → predictive-maintenance pattern: convert raw OT signals into a governed feature set, apply a purpose-built ML model, and route the resulting evidence through a human-approved field-service workflow. It provides decision support—not a generic chatbot, live equipment control, or field execution.
 
-## 2. Use Case Overview — Early ESP Risk to Field Response
+## 2. Use Case — ESP Predictive Maintenance (Asset Performance)
 
 This use case is for **upstream oil production / extraction**, not exploration. An electric submersible pump (ESP) lifts produced fluids from a well; deteriorating pump performance can lead to avoidable production loss and an expensive field intervention.
 
