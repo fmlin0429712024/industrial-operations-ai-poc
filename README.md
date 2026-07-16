@@ -35,34 +35,24 @@ flowchart TD
 
 ## 3. Data Gathering and Feature Engineering
 
-The model does **not** receive raw IoT messages. Telemetry arrives continuously, but a daily feature job applies quality checks and computes a governed feature record for each well using the latest 7-day and 30-day operating history.
+The model does **not** receive raw IoT messages. It receives one daily, feature-engineered record per well.
 
 ```mermaid
 flowchart LR
-    A[("Raw telemetry<br/>Real-time IoT readings")] --> B["Daily feature engineering<br/>Quality · align · compute trends"]
-    M[("Maintenance + alarm history")] --> B
-    B --> C[("Model-ready daily record<br/>One well · one date · one feature set")]
-    C --> D["ESP risk model"]
+    A["Telemetry sample<br/>every 5 minutes<br/>{<br/>well_id: WELL-024<br/>time: 10:05<br/>motor_current_a: 61.8<br/>oil_rate_bpd: 420<br/>}"] --> T["Daily feature engineering<br/>Quality checks<br/>7-day variability<br/>30-day trends"]
+    M["Maintenance / alarm sample<br/>{<br/>well_id: WELL-024<br/>last_intervention_days: 418<br/>recent_alarm: high current<br/>}"] --> T
+    T --> C["Model-ready daily record<br/>one well · one date<br/>{<br/>well_id: WELL-024<br/>date: 2026-07-15<br/>motor_current_cv_7d_pct: 10.5<br/>oil_rate_decline_30d_pct: 19.2<br/>alarm_count_30d: 4<br/>}"]
+    C --> D["ML inference"]
 
-    classDef raw fill:#f3f4f6,stroke:#6b7280,color:#111827;
-    classDef feature fill:#ede9fe,stroke:#7c3aed,color:#111827;
+    classDef source fill:#f3f4f6,stroke:#6b7280,color:#111827;
+    classDef transform fill:#ede9fe,stroke:#7c3aed,color:#111827;
     classDef model fill:#dbeafe,stroke:#2563eb,color:#111827;
-    class A,M raw;
-    class B,C feature;
+    class A,M source;
+    class T,C transform;
     class D model;
 ```
 
-### What the data looks like
-
-| Real-time raw telemetry | Daily model-ready feature record |
-|---|---|
-| `10:05 · WELL-024 · motor_current_a · 61.8` | `WELL-024 · 2026-07-15 · motor_current_cv_7d_pct: 10.5` |
-| `10:10 · WELL-024 · oil_rate_bpd · 420` | `oil_rate_decline_30d_pct: 19.2` |
-| `10:15 · WELL-024 · intake_pressure_psi · 920` | `intake_pressure_decline_30d_pct: 14.8` |
-| `Alarm event · WELL-024 · timestamp` | `alarm_count_30d: 4` |
-| `Maintenance event · WELL-024 · close date` | `days_since_last_intervention: 418` |
-
-The left side is a stream of narrow events. The right side is the single daily input record used by the prediction model: it turns current levels, recent variability, longer-term trends, alarms, and maintenance context into a coherent decision input.
+The left side is a stream of narrow operational events. The right side is the single daily record passed to inference: it combines current readings, recent variability, longer-term trends, alarms, and maintenance context.
 
 For model development, the POC uses synthetic historical daily records with a chronological train / validation / test split. For daily scoring, the record is unlabeled because the next 30-day outcome has not happened yet.
 
