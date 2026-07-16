@@ -115,7 +115,7 @@ flowchart LR
 
 ## 6. Production Extension — Harness & Governance
 
-This POC intentionally stops before production deployment. A GCP implementation could package the risk-score API and agent application as containers, deploy them to Cloud Run for portability or a managed agent platform for integrated operations, and connect them to governed OT, maintenance, and CMMS systems.
+This POC intentionally stops before production deployment. Its `SKILL.md` files use the portable Agent Skills format and can be loaded unchanged by Google ADK's `SkillToolset`; an ADK implementation adds thin Python agent and tool adapters around the same domain contracts. It can then package the risk-score API and agent application as containers, deploy them to Cloud Run for portability or a managed agent platform for integrated operations, and connect them to governed OT, maintenance, and CMMS systems.
 
 - **Harness:** Emit OpenTelemetry traces, run evaluation against known cases, preserve durable case state, and keep human approval in the execution path.
 - **Governance:** Apply IAM service identities, secret management, data-access controls, audit logs, and guardrails before any external model call or operational integration.
