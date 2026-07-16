@@ -6,7 +6,7 @@
 
 Industrial operations are a classic Industry 4.0 OT/IT transformation problem: high-volume operational telemetry lives alongside production, maintenance, and field-service information, but decisions still depend on fragmented evidence and manual coordination.
 
-This POC demonstrates a modern AI pattern for that environment: convert raw OT signals into a governed feature set, apply a purpose-built ML model, and route the resulting evidence through a human-approved operational workflow. It is not a generic chatbot and it does not automate equipment control.
+This public POC uses synthetic data to demonstrate a modern AI pattern for that environment: convert raw OT signals into a governed feature set, apply a purpose-built ML model, and route the resulting evidence through a human-approved operational workflow. It provides decision support—not a generic chatbot, live equipment control, or field execution.
 
 ## 2. Use Case Overview — Early ESP Risk to Field Response
 
@@ -113,4 +113,11 @@ flowchart LR
 
 - [Workflow implementation and skill mapping](WORKFLOW.md)
 
-**POC boundary.** All data and outcomes are synthetic. This project provides decision support only and does not connect to live equipment, CMMS, or field operations.
+## 6. Production Extension — Harness & Governance
+
+This POC intentionally stops before production deployment. A GCP implementation could package the risk-score API and agent application as containers, deploy them to Cloud Run for portability or a managed agent platform for integrated operations, and connect them to governed OT, maintenance, and CMMS systems.
+
+- **Harness:** Emit OpenTelemetry traces, run evaluation against known cases, preserve durable case state, and keep human approval in the execution path.
+- **Governance:** Apply IAM service identities, secret management, data-access controls, audit logs, and guardrails before any external model call or operational integration.
+
+For a deeper, cross-industry example of deployment choices, observability, evaluation, and human controls, see the [Customer Care Operations — Harness & Governance Showcase](https://github.com/fmlin0429712024/customer-care-agents).
