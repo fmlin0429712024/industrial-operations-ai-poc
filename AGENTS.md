@@ -18,6 +18,7 @@ README.md                       # Business story, architecture, and POC boundary
 ## Skill boundaries
 
 - `asset-performance`: assess asset/well risk from evidence.
+- `operational-feature-engineering`: transform governed OT and maintenance inputs into a daily model-ready feature record.
 - `process-energy-optimization`: evaluate operating-envelope trade-offs.
 - `field-execution`: create and close a synthetic diagnostic ticket after approval.
 - `agentic-operations-orchestrator`: preserve case state, enforce handoffs and approval, and record outcomes. Project-level `WORKFLOW.md` is the sole POC workflow contract.

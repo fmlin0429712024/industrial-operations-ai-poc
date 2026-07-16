@@ -52,15 +52,23 @@ The left side is a stream of narrow operational events. The right side is the si
 
 For model development, the POC uses synthetic historical daily records with a chronological train / validation / test split. For daily scoring, the record is unlabeled because the next 30-day outcome has not happened yet.
 
+The source-to-feature contract is defined in the [operational-feature-engineering skill](.agents/skills/operational-feature-engineering/SKILL.md).
+
 ## 4. Machine Learning Approach
 
-This is a supervised classification problem: predict whether a well has elevated risk of an ESP-related intervention or material production-loss event in the next 30 days. The lab compares an operating-rule baseline, logistic regression, and gradient-boosted trees; validation selects the model and threshold, and a held-out test set evaluates the final candidate.
+This is a supervised classification problem: predict whether a well has elevated risk of an ESP-related intervention or material production-loss event in the next 30 days.
+
+- **Offline training — completed:** The lab generates 2,400 synthetic historical daily records, splits them chronologically into train / validation / test sets, and compares an operating-rule baseline, logistic regression, and gradient-boosted trees. Validation selects the logistic-regression model and decision threshold; a held-out test set completes the final check.
+- **Reusable artifact:** Training produces a versioned `esp_risk_model.joblib` file plus compact evaluation reports. The model is interpretable and intentionally small for this POC; the same service boundary can later host a different validated model.
 
 The output is a risk score, tier, and visible supporting signals—not a root-cause diagnosis. [See the runnable ML Lab.](ml/README.md)
 
 ## 5. End-to-End Solution Workflow
 
-The model is only the first step. The workflow preserves the same `case_id` through scoring, human approval, synthetic ticket creation, field closure, and evaluation. The formal skills define each handoff; the local state-machine runner makes the workflow repeatable for both high-risk and healthy cases.
+The trained model is only the first step.
+
+- **Online inference — tested:** A daily feature file is sent to the local FastAPI `POST /risk-score` endpoint. The endpoint loads the trained model and returns the score, tier, and supporting evidence without duplicating model logic.
+- **Governed response:** The workflow preserves the same `case_id` through scoring, human approval, synthetic ticket creation, field closure, and evaluation. A high score requests review; it never authorizes field work by itself.
 
 - [Workflow implementation and skill mapping](WORKFLOW.md)
 

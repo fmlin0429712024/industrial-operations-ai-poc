@@ -1,0 +1,4 @@
+interface:
+  display_name: "Operational Feature Engineering"
+  short_description: "Build governed daily features from OT data"
+  default_prompt: "Use $operational-feature-engineering to define the model-ready daily ESP feature set from telemetry and maintenance data."

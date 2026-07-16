@@ -12,10 +12,11 @@ Use the project-level [`WORKFLOW.md`](../../../WORKFLOW.md) for the ESP risk-to-
 ## Workflow
 
 1. Create a case ID and capture immutable input references.
-2. Run `asset-performance` to assess risk, including the available ML risk-score tool when model-ready features are present.
-3. Stop at the decision gate. Require a named human approver for any field action.
-4. After approval, run `field-execution` to create a synthetic diagnostic ticket.
-5. Record the simulated field outcome, close the ticket, and compare it with the original assessment for evaluation.
+2. Run `operational-feature-engineering` when source telemetry and maintenance events require a daily model-ready feature record.
+3. Run `asset-performance` to assess risk, including the available ML risk-score tool when model-ready features are present.
+4. Stop at the decision gate. Require a named human approver for any field action.
+5. After approval, run `field-execution` to create a synthetic diagnostic ticket.
+6. Record the simulated field outcome, close the ticket, and compare it with the original assessment for evaluation.
 
 `process-energy-optimization` is not required for the narrow ESP reliability demo; retain it only when a real operating-envelope decision is in scope.
 
