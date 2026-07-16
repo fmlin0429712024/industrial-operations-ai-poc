@@ -10,15 +10,18 @@ This POC demonstrates a modern AI pattern for that environment: convert raw OT s
 
 ## 2. Use Case Overview — Early ESP Risk to Field Response
 
-At the end of each production day, the system scores each active ESP-lifted well. A high-risk signal gives the Asset Manager evidence to review. Only an approved inspection creates a synthetic field ticket; the Service Engineer's outcome closes the case and becomes evaluation evidence.
+This use case is for **upstream oil production / extraction**, not exploration. An electric submersible pump (ESP) lifts produced fluids from a well; deteriorating pump performance can lead to avoidable production loss and an expensive field intervention.
+
+- **Predict:** At the end of each production day, score each active ESP-lifted well for elevated 30-day ESP-related production-loss or intervention risk.
+- **Decide:** Give the Asset Manager the score and supporting signals for review; the model does not diagnose root cause or control equipment.
+- **Respond:** Only an approved inspection creates a field-service ticket. The Service Engineer closes the ticket with the field outcome, which becomes evaluation evidence.
 
 ```mermaid
 flowchart TD
-    A[("🧩 1. Feature-engineered daily batch<br/>Derived from IoT + maintenance data<br/>Not raw IoT messages")] --> B["2. Asset performance score<br/>ML risk score + evidence"]
-    B --> C{"3. ASSET MANAGER<br/>Approve, hold, or monitor"}
-    C -->|"Monitor / hold"| D["Close monitoring case<br/>No ticket"]
-    C -->|"Approve inspection"| E["4. Synthetic field-service ticket<br/>Diagnostic scope"]
-    E --> F["5. SERVICE ENGINEER closes ticket<br/>Outcome + evaluation record"]
+    A[("🧩 Daily feature batch<br/>IoT + maintenance")] --> B["ESP risk score<br/>Next 30 days"]
+    B --> C{"ASSET MANAGER<br/>Approve?"}
+    C -->|"No"| D["Monitor<br/>No ticket"]
+    C -->|"Yes"| E["Service ticket<br/>SERVICE ENGINEER closes"]
 
     classDef data fill:#ede9fe,stroke:#7c3aed,color:#111827;
     classDef model fill:#dbeafe,stroke:#2563eb,color:#111827;
@@ -27,13 +30,8 @@ flowchart TD
     class A data;
     class B model;
     class E ticket;
-    class C,F persona;
+    class C,E persona;
 ```
-
-| Synthetic well | Workflow result |
-|---|---|
-| `WELL-025` | Stable pattern → `monitor` → case closes; no ticket |
-| `WELL-024` | High risk → human approval → synthetic ticket → outcome record |
 
 ## 3. Data Gathering and Feature Engineering
 
