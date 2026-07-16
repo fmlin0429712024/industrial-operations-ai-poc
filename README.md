@@ -85,25 +85,11 @@ The trained model is only the first step.
 - **Online inference — tested:** A daily feature file is sent to the local FastAPI `POST /risk-score` endpoint. The endpoint loads the trained model and returns the score, tier, and supporting evidence without duplicating model logic.
 - **Governed response:** The workflow preserves the same `case_id` through scoring, human approval, synthetic ticket creation, field closure, and evaluation. A high score requests review; it never authorizes field work by itself.
 
-```mermaid
-flowchart LR
-    subgraph O["Agentic Operations Orchestrator — case ID, evidence, approval"]
-        A["Operational feature engineering<br/>Daily model-ready record"] --> B["Asset performance<br/>Calls ML risk-score tool"]
-        B --> C{"Named human<br/>approval"}
-        C -->|"Approved"| D["Field execution<br/>Synthetic ticket"]
-        C -->|"No action"| E["Monitor"]
-        D --> F["Field outcome<br/>Evaluation evidence"]
-    end
+**Execution order:** feature engineering → asset performance and ML scoring → named human approval → field execution → outcome and evaluation.
 
-    classDef skill fill:#ede9fe,stroke:#7c3aed,color:#111827;
-    classDef gate fill:#fff1f2,stroke:#e11d48,color:#9f1239,stroke-width:2px;
-    classDef action fill:#dcfce7,stroke:#16a34a,color:#111827;
-    class A,B,D skill;
-    class C gate;
-    class E,F action;
-```
+The skills are reusable Markdown workflow contracts that an agent such as Codex can load for rapid discovery and demo orchestration, then carry forward into an ADK implementation. The ML service remains a deterministic tool rather than a skill.
 
-| Component | Responsibility |
+| Skill / tool | Responsibility |
 |---|---|
 | [Operational feature engineering](.agents/skills/operational-feature-engineering/SKILL.md) | Convert governed telemetry and maintenance events into one daily model-ready record. |
 | [Asset performance](.agents/skills/asset-performance/SKILL.md) | Call the ML risk-score tool and assemble an evidence-backed risk brief. |
