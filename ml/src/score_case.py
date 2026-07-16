@@ -123,7 +123,7 @@ def main() -> None:
     parser.add_argument(
         "--input",
         type=Path,
-        default=ROOT / "data" / "well_24_score_request.json",
+        default=ROOT / "data" / "inference" / "well_24_score_request.json",
         help="JSON request containing the required feature values.",
     )
     parser.add_argument("--output", type=Path, help="Optional JSON output path.")

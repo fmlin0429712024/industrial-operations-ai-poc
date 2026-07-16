@@ -35,7 +35,7 @@ output: risk score, threshold, tier, evidence, review recommendation, model vers
 For the local lab, the equivalent direct tool command is:
 
 ```bash
-ml/.venv/bin/python ml/src/score_case.py --input ml/data/well_24_score_request.json
+ml/.venv/bin/python ml/src/score_case.py --input ml/data/inference/well_24_score_request.json
 ```
 
 The agent records the model score as evidence. It does not treat that score as a root-cause diagnosis or an authorization to change equipment.

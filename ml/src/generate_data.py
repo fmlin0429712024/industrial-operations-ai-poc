@@ -143,12 +143,23 @@ def generate_history() -> pd.DataFrame:
 
 
 def main() -> None:
-    output_path = Path(__file__).resolve().parents[1] / "data" / "esp_well_history.csv"
-    output_path.parent.mkdir(parents=True, exist_ok=True)
+    data_dir = Path(__file__).resolve().parents[1] / "data"
+    generated_dir = data_dir / ".generated"
+    data_dir.mkdir(parents=True, exist_ok=True)
+    generated_dir.mkdir(parents=True, exist_ok=True)
     history = generate_history()
-    history.to_csv(output_path, index=False)
+    history.to_csv(generated_dir / "esp_well_history.csv", index=False)
+    split_paths = {
+        "train": data_dir / "training.csv",
+        "validation": data_dir / "validation.csv",
+        "test": data_dir / "test.csv",
+    }
+    for split, output_path in split_paths.items():
+        history[history["split"] == split].to_csv(output_path, index=False)
     event_rate = history["risk_event_next_30d"].mean()
-    print(f"Wrote {len(history):,} rows to {output_path}")
+    print(f"Generated {len(history):,} synthetic rows")
+    for split, output_path in split_paths.items():
+        print(f"Wrote {split}: {len(history[history['split'] == split]):,} rows to {output_path}")
     print(f"Synthetic event rate: {event_rate:.1%}")
     print(history.groupby("split")["risk_event_next_30d"].agg(["count", "mean"]).round(3))
 

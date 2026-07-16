@@ -26,7 +26,10 @@ from sklearn.preprocessing import StandardScaler
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DATA_PATH = ROOT / "data" / "esp_well_history.csv"
+DATA_DIR = ROOT / "data"
+TRAIN_PATH = DATA_DIR / "training.csv"
+VALIDATION_PATH = DATA_DIR / "validation.csv"
+TEST_PATH = DATA_DIR / "test.csv"
 MODELS_DIR = ROOT / "models"
 REPORTS_DIR = ROOT / "reports"
 TARGET = "risk_event_next_30d"
@@ -166,15 +169,15 @@ def save_calibration_table(y_true: pd.Series, probabilities: np.ndarray) -> None
 
 
 def main() -> None:
-    if not DATA_PATH.exists():
+    required_paths = [TRAIN_PATH, VALIDATION_PATH, TEST_PATH]
+    if not all(path.exists() for path in required_paths):
         raise FileNotFoundError("Generate data first: python src/generate_data.py")
 
     MODELS_DIR.mkdir(exist_ok=True)
     REPORTS_DIR.mkdir(exist_ok=True)
-    data = pd.read_csv(DATA_PATH)
-    train = data[data["split"] == "train"].copy()
-    validation = data[data["split"] == "validation"].copy()
-    test = data[data["split"] == "test"].copy()
+    train = pd.read_csv(TRAIN_PATH)
+    validation = pd.read_csv(VALIDATION_PATH)
+    test = pd.read_csv(TEST_PATH)
 
     candidates: dict[str, Pipeline] = {
         "logistic_regression": make_logistic_model(),

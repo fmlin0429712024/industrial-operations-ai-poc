@@ -9,8 +9,8 @@ from score_case import ROOT, score_payload
 
 
 CASES = [
-    ROOT / "data" / "well_025_healthy_score_request.json",
-    ROOT / "data" / "well_24_score_request.json",
+    ROOT / "data" / "inference" / "well_025_healthy_score_request.json",
+    ROOT / "data" / "inference" / "well_24_score_request.json",
 ]
 
 

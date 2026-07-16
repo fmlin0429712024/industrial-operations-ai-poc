@@ -5,4 +5,8 @@ models/*.joblib
 !models/esp_risk_model.joblib
 !models/README.md
 reports/*.json
+data/.generated/
 data/*.csv
+!data/training.csv
+!data/validation.csv
+!data/test.csv

@@ -72,6 +72,8 @@ Synthetic well history
 
 The lab trains on 120 synthetic ESP-lifted wells observed monthly for 20 months: **2,400 historical rows**. The end-to-end workflow still demonstrates one well case; the ML model needs the wider well population to learn a generalizable pattern. A real implementation would normally use 12-24 months of governed historical data, with verified maintenance and production-loss outcomes.
 
+The physical datasets and their exact roles are documented in [`data/README.md`](data/README.md).
+
 | Data group | Included signals |
 |---|---|
 | Production | Oil rate, 30-day decline, water cut |
@@ -138,15 +140,15 @@ The optional FastAPI adapter exposes the same scoring function without duplicati
 ```bash
 cd ml
 .venv/bin/uvicorn api.app:app --reload
-# POST /risk-score using data/well_24_score_request.json
+# POST /risk-score using data/inference/well_24_score_request.json
 ```
 
 ### Step 2: See the model react to two cases
 
 The two static requests below are intentionally simple teaching examples, not real well records:
 
-- `data/well_025_healthy_score_request.json` - stable production, low signal variability, no alarms.
-- `data/well_24_score_request.json` - declining production, unstable current, pressure decline, alarms, and a long time since intervention.
+- `data/inference/well_025_healthy_score_request.json` - stable production, low signal variability, no alarms.
+- `data/inference/well_24_score_request.json` - declining production, unstable current, pressure decline, alarms, and a long time since intervention.
 
 Run both through the same trained model:
 
