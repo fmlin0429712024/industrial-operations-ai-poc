@@ -26,7 +26,8 @@ An upstream oil field monitors an oil well using an electric submersible pump (E
 
 ```mermaid
 flowchart TD
-    A["OT/IT context<br/>Telemetry · alarms · historian<br/>Maintenance · production context"] --> B["Asset Performance skill<br/>Risk brief + evidence"]
+    A["OT/IT context<br/>Telemetry · alarms · historian<br/>Maintenance · production context"] --> F0["Governed feature job<br/>Daily 17:00 local POC cadence"]
+    F0 --> B["Asset Performance skill<br/>Risk brief + evidence"]
     B --> C["Production Operations skill<br/>Operating envelope + trade-offs"]
     C --> D{"Human decision gate"}
     D -->|"Approve"| E["Field Execution skill<br/>Draft work package"]
@@ -70,12 +71,15 @@ The OT layer remains the trusted source for operational signals. Existing enterp
 
 ## 5. Included synthetic artifact
 
-- [`data/sample-asset-signal.json`](data/sample-asset-signal.json) — one synthetic ESP-lifted oil-well case with production telemetry, intervention context, and operating constraints.
+- [`data/sample-asset-signal.json`](data/sample-asset-signal.json) — high-risk synthetic workflow context; it references the matching ML feature pack rather than duplicating it.
+- [`data/sample-healthy-asset-signal.json`](data/sample-healthy-asset-signal.json) — healthy synthetic workflow context for the monitor-only path.
+- [`ml/data/inference/`](ml/data/inference/) — the two model-ready feature packs used by the ML scorer. The full training/validation/test data contract is in the [ML Lab](ml/README.md).
 
 ## 6. Runnable lab components
 
 - [`ESP Risk Modeling Lab`](ml/README.md) — the complete supervised-ML component: decision, synthetic data, chronological train/validation/test split, model comparison, held-out results, and future FastAPI boundary.
 - [`ESP Risk-to-Response Workflow`](WORKFLOW.md) — how a Codex or Claude Code agent uses the skills to call the risk model and move an approved case through operations and field execution.
+- [`src/workflow_runner.py`](src/workflow_runner.py) — runnable, deterministic POC test harness for the same workflow contract; it demonstrates high-risk, monitor-only, and explicit-approval paths.
 
 ## 7. What would make it production-ready
 

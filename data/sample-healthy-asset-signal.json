@@ -1,0 +1,12 @@
+{
+  "case_id": "synthetic-esp-well-025-2026-07-15",
+  "model_input_reference": "../ml/data/inference/well_025_healthy_score_request.json",
+  "asset": {"asset_id": "WELL-025", "asset_type": "esp_lifted_oil_well", "site": "synthetic-upstream-oil-field", "criticality": "medium"},
+  "telemetry_window": {
+    "oil_rate_bbl_d": {"current": 615, "baseline": 620, "trend": "stable"},
+    "esp_motor_current_a": {"current": 51.4, "baseline": 51.0, "trend": "stable"},
+    "pump_intake_pressure_psi": {"current": 1240, "baseline": 1250, "trend": "stable"}
+  },
+  "maintenance_context": {"last_intervention_days_ago": 96, "recent_work_orders": ["routine visual inspection completed"], "known_failure_modes": ["gas interference", "scale or deposition", "electrical or motor degradation"]},
+  "operating_context": {"production_objective": "sustain safe, stable oil production", "production_priority": "normal", "safety_constraint": "production-engineer approval required before any operating-parameter or intervention decision"}
+}

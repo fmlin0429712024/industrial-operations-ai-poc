@@ -12,6 +12,19 @@ Model-ready WELL-024 feature set
     -> simulated outcome and evaluation record
 ```
 
+## Operating cadence (POC assumption)
+
+The default operating model is a **daily batch decision-support job**, not a real-time control loop.
+
+| Time | Activity | Control boundary |
+|---|---|---|
+| 17:00 local field time | Lock the latest governed feature window for each active well | Fail closed when required feature data is missing or stale |
+| 17:15 | Score all eligible wells and rank high-risk cases | Model only recommends review; it never changes equipment settings |
+| 17:30 | Route high-risk cases to the production-engineer review queue | A named engineer must approve any draft inspection response |
+| On material alarm | Optionally re-score the affected well | Same human gate and safety boundary apply |
+
+The exact schedule is a client operating decision. The POC uses 17:00 only as a concrete, post-production-day assumption.
+
 ## Handoff contract
 
 | Step | Owner skill | Input | Simplified POC responsibility | Output |
@@ -52,3 +65,22 @@ The agent records the model score as evidence. It does not treat that score as a
 ## Required case record
 
 Every handoff keeps the same `case_id` and records source references, model version, score, uncertainty, named approver, approval time, draft-package reference, and eventual outcome. This is the workflow's minimum governance contract.
+
+## Runnable local workflow demo
+
+`src/workflow_runner.py` is a deterministic test harness for this contract. It is not a production agent runtime. It proves that the workflow context references the **same model-ready feature pack** used by the ML scorer and that a high-risk case cannot create even a draft field package without an explicit named approval.
+
+```bash
+# High-risk WELL-024: stops at the human-decision gate.
+ml/.venv/bin/python src/workflow_runner.py
+
+# Healthy WELL-025: records monitoring only.
+ml/.venv/bin/python src/workflow_runner.py \
+  --case data/sample-healthy-asset-signal.json
+
+# High-risk WELL-024: explicitly simulate an approved diagnostic inspection.
+ml/.venv/bin/python src/workflow_runner.py \
+  --approve-inspection --approver "Production Engineer (synthetic)"
+```
+
+In an agent-assisted demo, Codex or Claude Code reads the four `SKILL.md` files, calls the same risk-score tool, and follows this handoff contract. A future ADK or other agent runtime would replace this test harness—not the domain contracts or approval boundary.

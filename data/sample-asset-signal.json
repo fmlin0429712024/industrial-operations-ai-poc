@@ -1,6 +1,7 @@
 {
-  "case_id": "oil-well-esp-001",
-  "asset": {"asset_id": "WELL-24", "asset_type": "esp_lifted_oil_well", "site": "synthetic-upstream-oil-field", "criticality": "high"},
+  "case_id": "synthetic-esp-well-024-2026-07-15",
+  "model_input_reference": "../ml/data/inference/well_24_score_request.json",
+  "asset": {"asset_id": "WELL-024", "asset_type": "esp_lifted_oil_well", "site": "synthetic-upstream-oil-field", "criticality": "high"},
   "telemetry_window": {
     "oil_rate_bbl_d": {"current": 420, "baseline": 520, "trend": "declining"},
     "esp_motor_current_a": {"current": 62.0, "baseline": 52.0, "trend": "unstable"},

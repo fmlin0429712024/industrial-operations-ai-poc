@@ -11,6 +11,7 @@ This is a public-safe, dry-lab POC for upstream oil-field decision support. Use 
 .agents/skills/<skill-name>/agents/  # Codex UI metadata for that skill
 WORKFLOW.md                     # Cross-skill ESP workflow contract
 data/                           # Synthetic input artifacts only
+src/workflow_runner.py          # Deterministic local test harness for the workflow contract
 README.md                       # Business story, architecture, and POC boundary
 ```
 
