@@ -39,8 +39,8 @@ The model does **not** receive raw IoT messages. It receives one daily, feature-
 
 ```mermaid
 flowchart LR
-    A["Telemetry sample<br/>Well: WELL-024<br/>Time: 10:05<br/>Motor current: 61.8 A<br/>Oil rate: 420 BPD<br/><br/>Raw JSON · every 5 minutes"] -->|"Daily feature transformation"| C["Daily feature file<br/>Well: WELL-024<br/>Date: 2026-07-15<br/>Current variability, 7d: 10.5%<br/>Oil-rate decline, 30d: 19.2%<br/>Alarm count, 30d: 4<br/><br/>Feature JSON / CSV · daily<br/>Input to ML inference"]
-    M["Maintenance / alarm sample<br/>Well: WELL-024<br/>Last intervention: 418 days<br/>Recent alarm: high current<br/><br/>Event JSON · when recorded"] --> C
+    A["<div style='width:250px;text-align:left'><b>Telemetry sample</b><br/>Well: WELL-024<br/>Time: 10:05<br/>Motor current: 61.8 A<br/>Oil rate: 420 BPD<br/><br/>Raw JSON · every 5 minutes</div>"] -->|"Daily feature transformation"| C["<div style='width:330px;text-align:left'><b>Daily feature file</b><br/>Well: WELL-024<br/>Date: 2026-07-15<br/>Current variability, 7d: 10.5%<br/>Oil-rate decline, 30d: 19.2%<br/>Alarm count, 30d: 4<br/><br/>Feature JSON / CSV · daily<br/>Input to ML inference</div>"]
+    M["<div style='width:250px;text-align:left'><b>Maintenance / alarm sample</b><br/>Well: WELL-024<br/>Last intervention: 418 days<br/>Recent alarm: high current<br/><br/>Event JSON · when recorded</div>"] --> C
 
     classDef source fill:#f3f4f6,stroke:#6b7280,color:#111827;
     classDef feature fill:#ede9fe,stroke:#7c3aed,color:#111827;
