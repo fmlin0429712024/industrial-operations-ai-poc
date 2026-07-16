@@ -9,19 +9,20 @@ An upstream operator scores each active ESP-lifted oil well at the end of the pr
 ```mermaid
 flowchart TD
     A[("🧩 1. Feature-engineered daily batch<br/>Derived from IoT + maintenance data<br/>Not raw IoT messages")] --> B["2. Asset performance score<br/>ML risk score + evidence"]
-    B --> C{"3. Asset Manager<br/>Approve, hold, or monitor"}
+    B --> C{"3. ASSET MANAGER<br/>Approve, hold, or monitor"}
     C -->|"Monitor / hold"| D["Close monitoring case<br/>No ticket"]
     C -->|"Approve inspection"| E["4. Synthetic field-service ticket<br/>Diagnostic scope"]
-    E --> F["5. Service Engineer closes ticket<br/>Outcome + evaluation record"]
+    E --> F["5. SERVICE ENGINEER closes ticket<br/>Outcome + evaluation record"]
 
     classDef data fill:#ede9fe,stroke:#7c3aed,color:#111827;
     classDef model fill:#dbeafe,stroke:#2563eb,color:#111827;
     classDef gate fill:#fef3c7,stroke:#d97706,color:#111827;
     classDef ticket fill:#dcfce7,stroke:#16a34a,color:#111827;
+    classDef persona fill:#fff1f2,stroke:#e11d48,color:#9f1239,stroke-width:2px;
     class A data;
     class B model;
-    class C gate;
-    class E,F ticket;
+    class E ticket;
+    class C,F persona;
 ```
 
 ## Two test scenarios
